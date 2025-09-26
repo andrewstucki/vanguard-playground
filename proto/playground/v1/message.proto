@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+
+package playground.v1;
+
+option go_package = "playground/v1";
+
+service MessageService {
+  rpc GetMessage(GetMessageRequest) returns (GetMessageResponse) {
+    option (google.api.http) = {
+        get:"/v1/messages/{message_id}"
+    };
+  }
+  rpc CreateMessage(CreateMessageRequest) returns (CreateMessageResponse) {
+    option (google.api.http) = {
+        post:"/v1/messages"
+    };
+  }
+  rpc DeleteMessage(DeleteMessageRequest) returns (DeleteMessageResponse) {
+    option (google.api.http) = {
+        delete:"/v1/messages/{message_id}"
+    };
+  }
+  rpc ListMessages(ListMessagesRequest) returns (ListMessagesResponse) {
+    option (google.api.http) = {
+        get:"/v1/messages"
+    };
+  }
+}
+
+message Message {
+  string message_id = 1;
+  string text = 2;
+}
+
+message CreateMessageRequest {
+  string text = 1;
+}
+message CreateMessageResponse {
+  string message_id = 1;
+}
+
+message GetMessageRequest {
+  string message_id = 1;
+}
+message GetMessageResponse {
+  Message message = 1;
+}
+
+message ListMessagesRequest {}
+message ListMessagesResponse {
+  repeated Message messages = 1;
+}
+
+message DeleteMessageRequest {
+  string message_id = 1;
+}
+message DeleteMessageResponse {}
