@@ -12,16 +12,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var usePersistentDB bool
-
-// serveCmd represents the serve command
-var serveCmd = &cobra.Command{
-	Use: "serve",
+// workerCmd represents the serve command
+var workerCmd = &cobra.Command{
+	Use: "worker",
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx, cancel := signal.NotifyContext(cmd.Context(), syscall.SIGINT, syscall.SIGTERM)
 		defer cancel()
 
-		err := server.Run(ctx, port, usePersistentDB)
+		err := server.RunWorker(ctx)
 		if err != nil {
 			os.Exit(1)
 		}
@@ -29,7 +27,5 @@ var serveCmd = &cobra.Command{
 }
 
 func init() {
-	serveCmd.Flags().BoolVarP(&usePersistentDB, "persist", "P", false, "Use persistent database")
-
-	rootCmd.AddCommand(serveCmd)
+	rootCmd.AddCommand(workerCmd)
 }

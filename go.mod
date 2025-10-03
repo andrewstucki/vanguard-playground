@@ -7,7 +7,7 @@ require (
 	connectrpc.com/connect v1.19.0
 	connectrpc.com/validate v0.3.0
 	connectrpc.com/vanguard v0.3.0
-	github.com/andrewstucki/protoc-states v0.0.0-20251003175139-b7857a4ccef9
+	github.com/andrewstucki/protoc-states v0.0.0-20251003212408-8baa1d19f76b
 	github.com/google/uuid v1.6.0
 	github.com/microsoft/durabletask-go v0.6.0
 	github.com/rs/zerolog v1.34.0
@@ -30,12 +30,14 @@ require (
 	github.com/google/cel-go v0.25.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
+	github.com/libsql/sqlite-antlr4-parser v0.0.0-20240327125255-dbf53b6cbf06 // indirect
 	github.com/marusama/semaphore/v2 v2.5.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/spf13/pflag v1.0.9 // indirect
 	github.com/stoewer/go-strcase v1.3.0 // indirect
+	github.com/tursodatabase/go-libsql v0.0.0-20250912065916-9dd20bb43d31 // indirect
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
 	go.opentelemetry.io/otel v1.37.0 // indirect
 	go.opentelemetry.io/otel/metric v1.37.0 // indirect

@@ -46,6 +46,8 @@
               pkgs.cobra-cli
               pkgs.buf
               pkgs.protoc-states
+              pkgs.docker-compose
+              pkgs.sqlc
             ];
           };
         };

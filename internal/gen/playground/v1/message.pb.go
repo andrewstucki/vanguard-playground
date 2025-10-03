@@ -462,11 +462,12 @@ func (*DeleteMessageResponse) Descriptor() ([]byte, []int) {
 }
 
 type SendMessageState struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	OperationId   string                 `protobuf:"bytes,1,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
-	State         MessageState           `protobuf:"varint,4,opt,name=state,proto3,enum=playground.v1.MessageState" json:"state,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	OperationId     string                 `protobuf:"bytes,1,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
+	SimulateFailure bool                   `protobuf:"varint,2,opt,name=simulate_failure,json=simulateFailure,proto3" json:"simulate_failure,omitempty"`
+	State           MessageState           `protobuf:"varint,3,opt,name=state,proto3,enum=playground.v1.MessageState" json:"state,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *SendMessageState) Reset() {
@@ -504,6 +505,13 @@ func (x *SendMessageState) GetOperationId() string {
 		return x.OperationId
 	}
 	return ""
+}
+
+func (x *SendMessageState) GetSimulateFailure() bool {
+	if x != nil {
+		return x.SimulateFailure
+	}
+	return false
 }
 
 func (x *SendMessageState) GetState() MessageState {
@@ -671,7 +679,7 @@ func (x *MessageStatusRequest) GetOperationId() string {
 
 type MessageStatusResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	State         MessageState           `protobuf:"varint,1,opt,name=state,proto3,enum=playground.v1.MessageState" json:"state,omitempty"`
+	State         string                 `protobuf:"bytes,1,opt,name=state,proto3" json:"state,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -706,11 +714,11 @@ func (*MessageStatusResponse) Descriptor() ([]byte, []int) {
 	return file_playground_v1_message_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *MessageStatusResponse) GetState() MessageState {
+func (x *MessageStatusResponse) GetState() string {
 	if x != nil {
 		return x.State
 	}
-	return MessageState_SENDING
+	return ""
 }
 
 var File_playground_v1_message_proto protoreflect.FileDescriptor
@@ -739,10 +747,11 @@ const file_playground_v1_message_proto_rawDesc = "" +
 	"\x14DeleteMessageRequest\x12*\n" +
 	"\n" +
 	"message_id\x18\x01 \x01(\tB\v\xbaH\b\xc8\x01\x01r\x03\xb0\x01\x01R\tmessageId\"\x17\n" +
-	"\x15DeleteMessageResponse\"\x89\x01\n" +
+	"\x15DeleteMessageResponse\"\xb4\x01\n" +
 	"\x10SendMessageState\x12!\n" +
-	"\foperation_id\x18\x01 \x01(\tR\voperationId\x121\n" +
-	"\x05state\x18\x04 \x01(\x0e2\x1b.playground.v1.MessageStateR\x05state:\x1f\x82\xd28\x1b\n" +
+	"\foperation_id\x18\x01 \x01(\tR\voperationId\x12)\n" +
+	"\x10simulate_failure\x18\x02 \x01(\bR\x0fsimulateFailure\x121\n" +
+	"\x05state\x18\x03 \x01(\x0e2\x1b.playground.v1.MessageStateR\x05state:\x1f\x82\xd28\x1b\n" +
 	"\x19\n" +
 	"\x11\b\x05\x10\x01\x19\x00\x00\x00\x00\x00\x00\x00@ \n" +
 	"(<\x12\x04\n" +
@@ -758,9 +767,9 @@ const file_playground_v1_message_proto_rawDesc = "" +
 	"\x14MessageStatusRequest\x12*\n" +
 	"\n" +
 	"message_id\x18\x01 \x01(\tB\v\xbaH\b\xc8\x01\x01r\x03\xb0\x01\x01R\tmessageId\x12)\n" +
-	"\foperation_id\x18\x02 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\voperationId\"J\n" +
-	"\x15MessageStatusResponse\x121\n" +
-	"\x05state\x18\x01 \x01(\x0e2\x1b.playground.v1.MessageStateR\x05state*6\n" +
+	"\foperation_id\x18\x02 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\voperationId\"-\n" +
+	"\x15MessageStatusResponse\x12\x14\n" +
+	"\x05state\x18\x01 \x01(\tR\x05state*6\n" +
 	"\fMessageState\x12\v\n" +
 	"\aSENDING\x10\x00\x12\n" +
 	"\n" +
@@ -811,24 +820,23 @@ var file_playground_v1_message_proto_depIdxs = []int32{
 	1,  // 0: playground.v1.GetMessageResponse.message:type_name -> playground.v1.Message
 	1,  // 1: playground.v1.ListMessagesResponse.messages:type_name -> playground.v1.Message
 	0,  // 2: playground.v1.SendMessageState.state:type_name -> playground.v1.MessageState
-	0,  // 3: playground.v1.MessageStatusResponse.state:type_name -> playground.v1.MessageState
-	4,  // 4: playground.v1.MessageService.GetMessage:input_type -> playground.v1.GetMessageRequest
-	2,  // 5: playground.v1.MessageService.CreateMessage:input_type -> playground.v1.CreateMessageRequest
-	8,  // 6: playground.v1.MessageService.DeleteMessage:input_type -> playground.v1.DeleteMessageRequest
-	6,  // 7: playground.v1.MessageService.ListMessages:input_type -> playground.v1.ListMessagesRequest
-	11, // 8: playground.v1.MessageService.SendMessage:input_type -> playground.v1.SendMessageRequest
-	13, // 9: playground.v1.MessageService.MessageStatus:input_type -> playground.v1.MessageStatusRequest
-	5,  // 10: playground.v1.MessageService.GetMessage:output_type -> playground.v1.GetMessageResponse
-	3,  // 11: playground.v1.MessageService.CreateMessage:output_type -> playground.v1.CreateMessageResponse
-	9,  // 12: playground.v1.MessageService.DeleteMessage:output_type -> playground.v1.DeleteMessageResponse
-	7,  // 13: playground.v1.MessageService.ListMessages:output_type -> playground.v1.ListMessagesResponse
-	12, // 14: playground.v1.MessageService.SendMessage:output_type -> playground.v1.SendMessageResponse
-	14, // 15: playground.v1.MessageService.MessageStatus:output_type -> playground.v1.MessageStatusResponse
-	10, // [10:16] is the sub-list for method output_type
-	4,  // [4:10] is the sub-list for method input_type
-	4,  // [4:4] is the sub-list for extension type_name
-	4,  // [4:4] is the sub-list for extension extendee
-	0,  // [0:4] is the sub-list for field type_name
+	4,  // 3: playground.v1.MessageService.GetMessage:input_type -> playground.v1.GetMessageRequest
+	2,  // 4: playground.v1.MessageService.CreateMessage:input_type -> playground.v1.CreateMessageRequest
+	8,  // 5: playground.v1.MessageService.DeleteMessage:input_type -> playground.v1.DeleteMessageRequest
+	6,  // 6: playground.v1.MessageService.ListMessages:input_type -> playground.v1.ListMessagesRequest
+	11, // 7: playground.v1.MessageService.SendMessage:input_type -> playground.v1.SendMessageRequest
+	13, // 8: playground.v1.MessageService.MessageStatus:input_type -> playground.v1.MessageStatusRequest
+	5,  // 9: playground.v1.MessageService.GetMessage:output_type -> playground.v1.GetMessageResponse
+	3,  // 10: playground.v1.MessageService.CreateMessage:output_type -> playground.v1.CreateMessageResponse
+	9,  // 11: playground.v1.MessageService.DeleteMessage:output_type -> playground.v1.DeleteMessageResponse
+	7,  // 12: playground.v1.MessageService.ListMessages:output_type -> playground.v1.ListMessagesResponse
+	12, // 13: playground.v1.MessageService.SendMessage:output_type -> playground.v1.SendMessageResponse
+	14, // 14: playground.v1.MessageService.MessageStatus:output_type -> playground.v1.MessageStatusResponse
+	9,  // [9:15] is the sub-list for method output_type
+	3,  // [3:9] is the sub-list for method input_type
+	3,  // [3:3] is the sub-list for extension type_name
+	3,  // [3:3] is the sub-list for extension extendee
+	0,  // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_playground_v1_message_proto_init() }

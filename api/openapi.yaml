@@ -191,8 +191,7 @@ components:
             type: object
             properties:
                 state:
-                    type: integer
-                    format: enum
+                    type: string
         SendMessageResponse:
             type: object
             properties:

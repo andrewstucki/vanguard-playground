@@ -23,5 +23,5 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.Flags().IntVarP(&port, "port", "p", 8080, "Port for the server")
+	rootCmd.Flags().IntVarP(&port, "port", "p", 8081, "Port for the server")
 }

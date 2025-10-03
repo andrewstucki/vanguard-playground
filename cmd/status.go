@@ -27,7 +27,7 @@ var statusCmd = &cobra.Command{
 			fmt.Println("error:", err)
 			os.Exit(1)
 		}
-		fmt.Printf("state: %+v\n", response.Msg.State.String())
+		fmt.Printf("state: %+v\n", response.Msg.State)
 	},
 }
 

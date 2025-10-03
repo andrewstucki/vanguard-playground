@@ -87,7 +87,8 @@ enum MessageState {
 
 message SendMessageState {
   string operation_id = 1;
-  MessageState state = 4;
+  bool simulate_failure = 2;
+  MessageState state = 3;
 
   option (state.v1.machine).states = {
     default_retry_policy: {max_attempts: 5, initial_retry_interval_seconds: 1, backoff_coefficient: 2.0, max_retry_interval_seconds: 10, retry_timeout_seconds: 60},
@@ -119,5 +120,5 @@ message MessageStatusRequest {
   ];
 }
 message MessageStatusResponse {
-  MessageState state = 1;
+  string state = 1;
 }
