@@ -1,6 +1,8 @@
 syntax = "proto3";
 
 import "google/api/annotations.proto";
+import "buf/validate/validate.proto";
+import "state/v1/state.proto";
 
 package playground.v1;
 
@@ -27,6 +29,16 @@ service MessageService {
         get:"/v1/messages"
     };
   }
+  rpc SendMessage(SendMessageRequest) returns (SendMessageResponse) {
+    option (google.api.http) = {
+        post:"/v1/messages/{message_id}/send"
+    };
+  }
+  rpc MessageStatus(MessageStatusRequest) returns (MessageStatusResponse) {
+    option (google.api.http) = {
+        get:"/v1/messages/{message_id}/status/{operation_id}"
+    };
+  }
 }
 
 message Message {
@@ -35,14 +47,20 @@ message Message {
 }
 
 message CreateMessageRequest {
-  string text = 1;
+  string text = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.max_len = 64
+  ];
 }
 message CreateMessageResponse {
   string message_id = 1;
 }
 
 message GetMessageRequest {
-  string message_id = 1;
+  string message_id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
 }
 message GetMessageResponse {
   Message message = 1;
@@ -54,6 +72,52 @@ message ListMessagesResponse {
 }
 
 message DeleteMessageRequest {
-  string message_id = 1;
+  string message_id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
 }
 message DeleteMessageResponse {}
+
+enum MessageState {
+  SENDING = 0;
+  FAILED = 1;
+  SUCCEEDED = 2;
+}
+
+message SendMessageState {
+  string operation_id = 1;
+  MessageState state = 4;
+
+  option (state.v1.machine).states = {
+    default_retry_policy: {max_attempts: 5, initial_retry_interval_seconds: 1, backoff_coefficient: 2.0, max_retry_interval_seconds: 10, retry_timeout_seconds: 60},
+    transitions: [
+      {name: "do"}
+    ]
+  };
+}
+
+message SendMessageRequest {
+  string message_id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  bool simulate_failure = 2;
+}
+message SendMessageResponse {
+  string message_id = 1;
+  string operation_id = 2;
+}
+
+message MessageStatusRequest {
+  string message_id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  string operation_id = 2 [
+    (buf.validate.field).required = true
+  ];
+}
+message MessageStatusResponse {
+  MessageState state = 1;
+}

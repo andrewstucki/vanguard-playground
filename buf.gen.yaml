@@ -5,10 +5,17 @@ managed:
   disable:
     - file_option: go_package
       module: buf.build/googleapis/googleapis
+    - file_option: go_package
+      module: buf.build/bufbuild/protovalidate
+    - file_option: go_package
+      module: buf.build/andrewstucki/protoc-states
   override:
     - file_option: go_package_prefix
       value: github.com/andrewstucki/vanguard-playground/internal/gen
 plugins:
+  - local: protoc-states
+    out: internal/gen
+    opt: paths=source_relative
   - local: protoc-gen-go
     out: internal/gen
     opt: paths=source_relative
@@ -19,6 +26,6 @@ plugins:
     out: internal/gen
     opt: paths=source_relative
   - remote: buf.build/community/google-gnostic-openapi
-    out: openapi.json
+    out: api
 inputs:
   - directory: proto

@@ -45,6 +45,7 @@
               pkgs.go_1_25
               pkgs.cobra-cli
               pkgs.buf
+              pkgs.protoc-states
             ];
           };
         };

@@ -13,23 +13,24 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// getCmd represents the get command
-var getCmd = &cobra.Command{
-	Use:  "get [flags] <message-id>",
-	Args: cobra.ExactArgs(1),
+// statusCmd represents the status command
+var statusCmd = &cobra.Command{
+	Use:  "status [flags] <message-id> <operation-id>",
+	Args: cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
 		client := client.NewClient(port)
-		response, err := client.GetMessage(cmd.Context(), connect.NewRequest(&playgroundv1.GetMessageRequest{
-			MessageId: args[0],
+		response, err := client.MessageStatus(cmd.Context(), connect.NewRequest(&playgroundv1.MessageStatusRequest{
+			MessageId:   args[0],
+			OperationId: args[1],
 		}))
 		if err != nil {
 			fmt.Println("error:", err)
 			os.Exit(1)
 		}
-		fmt.Printf("message: %+v\n", response.Msg.Message)
+		fmt.Printf("state: %+v\n", response.Msg.State.String())
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(getCmd)
+	rootCmd.AddCommand(statusCmd)
 }

@@ -2,6 +2,8 @@
 version: v2
 deps:
     - buf.build/googleapis/googleapis
+    - buf.build/bufbuild/protovalidate
+    - buf.build/andrewstucki/protoc-states
 modules:
   - path: proto
 lint:

@@ -15,7 +15,7 @@ import (
 
 // deleteCmd represents the delete command
 var deleteCmd = &cobra.Command{
-	Use:  "delete",
+	Use:  "delete [flags] <message-id>",
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		client := client.NewClient(port)

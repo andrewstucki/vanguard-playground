@@ -45,6 +45,12 @@ const (
 	// MessageServiceListMessagesProcedure is the fully-qualified name of the MessageService's
 	// ListMessages RPC.
 	MessageServiceListMessagesProcedure = "/playground.v1.MessageService/ListMessages"
+	// MessageServiceSendMessageProcedure is the fully-qualified name of the MessageService's
+	// SendMessage RPC.
+	MessageServiceSendMessageProcedure = "/playground.v1.MessageService/SendMessage"
+	// MessageServiceMessageStatusProcedure is the fully-qualified name of the MessageService's
+	// MessageStatus RPC.
+	MessageServiceMessageStatusProcedure = "/playground.v1.MessageService/MessageStatus"
 )
 
 // MessageServiceClient is a client for the playground.v1.MessageService service.
@@ -53,6 +59,8 @@ type MessageServiceClient interface {
 	CreateMessage(context.Context, *connect.Request[v1.CreateMessageRequest]) (*connect.Response[v1.CreateMessageResponse], error)
 	DeleteMessage(context.Context, *connect.Request[v1.DeleteMessageRequest]) (*connect.Response[v1.DeleteMessageResponse], error)
 	ListMessages(context.Context, *connect.Request[v1.ListMessagesRequest]) (*connect.Response[v1.ListMessagesResponse], error)
+	SendMessage(context.Context, *connect.Request[v1.SendMessageRequest]) (*connect.Response[v1.SendMessageResponse], error)
+	MessageStatus(context.Context, *connect.Request[v1.MessageStatusRequest]) (*connect.Response[v1.MessageStatusResponse], error)
 }
 
 // NewMessageServiceClient constructs a client for the playground.v1.MessageService service. By
@@ -90,6 +98,18 @@ func NewMessageServiceClient(httpClient connect.HTTPClient, baseURL string, opts
 			connect.WithSchema(messageServiceMethods.ByName("ListMessages")),
 			connect.WithClientOptions(opts...),
 		),
+		sendMessage: connect.NewClient[v1.SendMessageRequest, v1.SendMessageResponse](
+			httpClient,
+			baseURL+MessageServiceSendMessageProcedure,
+			connect.WithSchema(messageServiceMethods.ByName("SendMessage")),
+			connect.WithClientOptions(opts...),
+		),
+		messageStatus: connect.NewClient[v1.MessageStatusRequest, v1.MessageStatusResponse](
+			httpClient,
+			baseURL+MessageServiceMessageStatusProcedure,
+			connect.WithSchema(messageServiceMethods.ByName("MessageStatus")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -99,6 +119,8 @@ type messageServiceClient struct {
 	createMessage *connect.Client[v1.CreateMessageRequest, v1.CreateMessageResponse]
 	deleteMessage *connect.Client[v1.DeleteMessageRequest, v1.DeleteMessageResponse]
 	listMessages  *connect.Client[v1.ListMessagesRequest, v1.ListMessagesResponse]
+	sendMessage   *connect.Client[v1.SendMessageRequest, v1.SendMessageResponse]
+	messageStatus *connect.Client[v1.MessageStatusRequest, v1.MessageStatusResponse]
 }
 
 // GetMessage calls playground.v1.MessageService.GetMessage.
@@ -121,12 +143,24 @@ func (c *messageServiceClient) ListMessages(ctx context.Context, req *connect.Re
 	return c.listMessages.CallUnary(ctx, req)
 }
 
+// SendMessage calls playground.v1.MessageService.SendMessage.
+func (c *messageServiceClient) SendMessage(ctx context.Context, req *connect.Request[v1.SendMessageRequest]) (*connect.Response[v1.SendMessageResponse], error) {
+	return c.sendMessage.CallUnary(ctx, req)
+}
+
+// MessageStatus calls playground.v1.MessageService.MessageStatus.
+func (c *messageServiceClient) MessageStatus(ctx context.Context, req *connect.Request[v1.MessageStatusRequest]) (*connect.Response[v1.MessageStatusResponse], error) {
+	return c.messageStatus.CallUnary(ctx, req)
+}
+
 // MessageServiceHandler is an implementation of the playground.v1.MessageService service.
 type MessageServiceHandler interface {
 	GetMessage(context.Context, *connect.Request[v1.GetMessageRequest]) (*connect.Response[v1.GetMessageResponse], error)
 	CreateMessage(context.Context, *connect.Request[v1.CreateMessageRequest]) (*connect.Response[v1.CreateMessageResponse], error)
 	DeleteMessage(context.Context, *connect.Request[v1.DeleteMessageRequest]) (*connect.Response[v1.DeleteMessageResponse], error)
 	ListMessages(context.Context, *connect.Request[v1.ListMessagesRequest]) (*connect.Response[v1.ListMessagesResponse], error)
+	SendMessage(context.Context, *connect.Request[v1.SendMessageRequest]) (*connect.Response[v1.SendMessageResponse], error)
+	MessageStatus(context.Context, *connect.Request[v1.MessageStatusRequest]) (*connect.Response[v1.MessageStatusResponse], error)
 }
 
 // NewMessageServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -160,6 +194,18 @@ func NewMessageServiceHandler(svc MessageServiceHandler, opts ...connect.Handler
 		connect.WithSchema(messageServiceMethods.ByName("ListMessages")),
 		connect.WithHandlerOptions(opts...),
 	)
+	messageServiceSendMessageHandler := connect.NewUnaryHandler(
+		MessageServiceSendMessageProcedure,
+		svc.SendMessage,
+		connect.WithSchema(messageServiceMethods.ByName("SendMessage")),
+		connect.WithHandlerOptions(opts...),
+	)
+	messageServiceMessageStatusHandler := connect.NewUnaryHandler(
+		MessageServiceMessageStatusProcedure,
+		svc.MessageStatus,
+		connect.WithSchema(messageServiceMethods.ByName("MessageStatus")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/playground.v1.MessageService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case MessageServiceGetMessageProcedure:
@@ -170,6 +216,10 @@ func NewMessageServiceHandler(svc MessageServiceHandler, opts ...connect.Handler
 			messageServiceDeleteMessageHandler.ServeHTTP(w, r)
 		case MessageServiceListMessagesProcedure:
 			messageServiceListMessagesHandler.ServeHTTP(w, r)
+		case MessageServiceSendMessageProcedure:
+			messageServiceSendMessageHandler.ServeHTTP(w, r)
+		case MessageServiceMessageStatusProcedure:
+			messageServiceMessageStatusHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -193,4 +243,12 @@ func (UnimplementedMessageServiceHandler) DeleteMessage(context.Context, *connec
 
 func (UnimplementedMessageServiceHandler) ListMessages(context.Context, *connect.Request[v1.ListMessagesRequest]) (*connect.Response[v1.ListMessagesResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("playground.v1.MessageService.ListMessages is not implemented"))
+}
+
+func (UnimplementedMessageServiceHandler) SendMessage(context.Context, *connect.Request[v1.SendMessageRequest]) (*connect.Response[v1.SendMessageResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("playground.v1.MessageService.SendMessage is not implemented"))
+}
+
+func (UnimplementedMessageServiceHandler) MessageStatus(context.Context, *connect.Request[v1.MessageStatusRequest]) (*connect.Response[v1.MessageStatusResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("playground.v1.MessageService.MessageStatus is not implemented"))
 }

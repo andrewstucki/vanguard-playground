@@ -23,6 +23,8 @@ const (
 	MessageService_CreateMessage_FullMethodName = "/playground.v1.MessageService/CreateMessage"
 	MessageService_DeleteMessage_FullMethodName = "/playground.v1.MessageService/DeleteMessage"
 	MessageService_ListMessages_FullMethodName  = "/playground.v1.MessageService/ListMessages"
+	MessageService_SendMessage_FullMethodName   = "/playground.v1.MessageService/SendMessage"
+	MessageService_MessageStatus_FullMethodName = "/playground.v1.MessageService/MessageStatus"
 )
 
 // MessageServiceClient is the client API for MessageService service.
@@ -33,6 +35,8 @@ type MessageServiceClient interface {
 	CreateMessage(ctx context.Context, in *CreateMessageRequest, opts ...grpc.CallOption) (*CreateMessageResponse, error)
 	DeleteMessage(ctx context.Context, in *DeleteMessageRequest, opts ...grpc.CallOption) (*DeleteMessageResponse, error)
 	ListMessages(ctx context.Context, in *ListMessagesRequest, opts ...grpc.CallOption) (*ListMessagesResponse, error)
+	SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageResponse, error)
+	MessageStatus(ctx context.Context, in *MessageStatusRequest, opts ...grpc.CallOption) (*MessageStatusResponse, error)
 }
 
 type messageServiceClient struct {
@@ -83,6 +87,26 @@ func (c *messageServiceClient) ListMessages(ctx context.Context, in *ListMessage
 	return out, nil
 }
 
+func (c *messageServiceClient) SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SendMessageResponse)
+	err := c.cc.Invoke(ctx, MessageService_SendMessage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *messageServiceClient) MessageStatus(ctx context.Context, in *MessageStatusRequest, opts ...grpc.CallOption) (*MessageStatusResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MessageStatusResponse)
+	err := c.cc.Invoke(ctx, MessageService_MessageStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MessageServiceServer is the server API for MessageService service.
 // All implementations must embed UnimplementedMessageServiceServer
 // for forward compatibility.
@@ -91,6 +115,8 @@ type MessageServiceServer interface {
 	CreateMessage(context.Context, *CreateMessageRequest) (*CreateMessageResponse, error)
 	DeleteMessage(context.Context, *DeleteMessageRequest) (*DeleteMessageResponse, error)
 	ListMessages(context.Context, *ListMessagesRequest) (*ListMessagesResponse, error)
+	SendMessage(context.Context, *SendMessageRequest) (*SendMessageResponse, error)
+	MessageStatus(context.Context, *MessageStatusRequest) (*MessageStatusResponse, error)
 	mustEmbedUnimplementedMessageServiceServer()
 }
 
@@ -112,6 +138,12 @@ func (UnimplementedMessageServiceServer) DeleteMessage(context.Context, *DeleteM
 }
 func (UnimplementedMessageServiceServer) ListMessages(context.Context, *ListMessagesRequest) (*ListMessagesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMessages not implemented")
+}
+func (UnimplementedMessageServiceServer) SendMessage(context.Context, *SendMessageRequest) (*SendMessageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendMessage not implemented")
+}
+func (UnimplementedMessageServiceServer) MessageStatus(context.Context, *MessageStatusRequest) (*MessageStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MessageStatus not implemented")
 }
 func (UnimplementedMessageServiceServer) mustEmbedUnimplementedMessageServiceServer() {}
 func (UnimplementedMessageServiceServer) testEmbeddedByValue()                        {}
@@ -206,6 +238,42 @@ func _MessageService_ListMessages_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MessageService_SendMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendMessageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MessageServiceServer).SendMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MessageService_SendMessage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MessageServiceServer).SendMessage(ctx, req.(*SendMessageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MessageService_MessageStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MessageStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MessageServiceServer).MessageStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MessageService_MessageStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MessageServiceServer).MessageStatus(ctx, req.(*MessageStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MessageService_ServiceDesc is the grpc.ServiceDesc for MessageService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -228,6 +296,14 @@ var MessageService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListMessages",
 			Handler:    _MessageService_ListMessages_Handler,
+		},
+		{
+			MethodName: "SendMessage",
+			Handler:    _MessageService_SendMessage_Handler,
+		},
+		{
+			MethodName: "MessageStatus",
+			Handler:    _MessageService_MessageStatus_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

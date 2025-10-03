@@ -7,6 +7,8 @@
 package playgroundv1
 
 import (
+	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	_ "github.com/andrewstucki/protoc-states/gen/state/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -21,6 +23,55 @@ const (
 	// Verify that runtime/protoimpl is sufficiently up-to-date.
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
+
+type MessageState int32
+
+const (
+	MessageState_SENDING   MessageState = 0
+	MessageState_FAILED    MessageState = 1
+	MessageState_SUCCEEDED MessageState = 2
+)
+
+// Enum value maps for MessageState.
+var (
+	MessageState_name = map[int32]string{
+		0: "SENDING",
+		1: "FAILED",
+		2: "SUCCEEDED",
+	}
+	MessageState_value = map[string]int32{
+		"SENDING":   0,
+		"FAILED":    1,
+		"SUCCEEDED": 2,
+	}
+)
+
+func (x MessageState) Enum() *MessageState {
+	p := new(MessageState)
+	*p = x
+	return p
+}
+
+func (x MessageState) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (MessageState) Descriptor() protoreflect.EnumDescriptor {
+	return file_playground_v1_message_proto_enumTypes[0].Descriptor()
+}
+
+func (MessageState) Type() protoreflect.EnumType {
+	return &file_playground_v1_message_proto_enumTypes[0]
+}
+
+func (x MessageState) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use MessageState.Descriptor instead.
+func (MessageState) EnumDescriptor() ([]byte, []int) {
+	return file_playground_v1_message_proto_rawDescGZIP(), []int{0}
+}
 
 type Message struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -410,38 +461,319 @@ func (*DeleteMessageResponse) Descriptor() ([]byte, []int) {
 	return file_playground_v1_message_proto_rawDescGZIP(), []int{8}
 }
 
+type SendMessageState struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	OperationId   string                 `protobuf:"bytes,1,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
+	State         MessageState           `protobuf:"varint,4,opt,name=state,proto3,enum=playground.v1.MessageState" json:"state,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SendMessageState) Reset() {
+	*x = SendMessageState{}
+	mi := &file_playground_v1_message_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SendMessageState) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SendMessageState) ProtoMessage() {}
+
+func (x *SendMessageState) ProtoReflect() protoreflect.Message {
+	mi := &file_playground_v1_message_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SendMessageState.ProtoReflect.Descriptor instead.
+func (*SendMessageState) Descriptor() ([]byte, []int) {
+	return file_playground_v1_message_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *SendMessageState) GetOperationId() string {
+	if x != nil {
+		return x.OperationId
+	}
+	return ""
+}
+
+func (x *SendMessageState) GetState() MessageState {
+	if x != nil {
+		return x.State
+	}
+	return MessageState_SENDING
+}
+
+type SendMessageRequest struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	MessageId       string                 `protobuf:"bytes,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
+	SimulateFailure bool                   `protobuf:"varint,2,opt,name=simulate_failure,json=simulateFailure,proto3" json:"simulate_failure,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *SendMessageRequest) Reset() {
+	*x = SendMessageRequest{}
+	mi := &file_playground_v1_message_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SendMessageRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SendMessageRequest) ProtoMessage() {}
+
+func (x *SendMessageRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_playground_v1_message_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SendMessageRequest.ProtoReflect.Descriptor instead.
+func (*SendMessageRequest) Descriptor() ([]byte, []int) {
+	return file_playground_v1_message_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *SendMessageRequest) GetMessageId() string {
+	if x != nil {
+		return x.MessageId
+	}
+	return ""
+}
+
+func (x *SendMessageRequest) GetSimulateFailure() bool {
+	if x != nil {
+		return x.SimulateFailure
+	}
+	return false
+}
+
+type SendMessageResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	MessageId     string                 `protobuf:"bytes,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
+	OperationId   string                 `protobuf:"bytes,2,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SendMessageResponse) Reset() {
+	*x = SendMessageResponse{}
+	mi := &file_playground_v1_message_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SendMessageResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SendMessageResponse) ProtoMessage() {}
+
+func (x *SendMessageResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_playground_v1_message_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SendMessageResponse.ProtoReflect.Descriptor instead.
+func (*SendMessageResponse) Descriptor() ([]byte, []int) {
+	return file_playground_v1_message_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *SendMessageResponse) GetMessageId() string {
+	if x != nil {
+		return x.MessageId
+	}
+	return ""
+}
+
+func (x *SendMessageResponse) GetOperationId() string {
+	if x != nil {
+		return x.OperationId
+	}
+	return ""
+}
+
+type MessageStatusRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	MessageId     string                 `protobuf:"bytes,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
+	OperationId   string                 `protobuf:"bytes,2,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MessageStatusRequest) Reset() {
+	*x = MessageStatusRequest{}
+	mi := &file_playground_v1_message_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MessageStatusRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MessageStatusRequest) ProtoMessage() {}
+
+func (x *MessageStatusRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_playground_v1_message_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MessageStatusRequest.ProtoReflect.Descriptor instead.
+func (*MessageStatusRequest) Descriptor() ([]byte, []int) {
+	return file_playground_v1_message_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *MessageStatusRequest) GetMessageId() string {
+	if x != nil {
+		return x.MessageId
+	}
+	return ""
+}
+
+func (x *MessageStatusRequest) GetOperationId() string {
+	if x != nil {
+		return x.OperationId
+	}
+	return ""
+}
+
+type MessageStatusResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	State         MessageState           `protobuf:"varint,1,opt,name=state,proto3,enum=playground.v1.MessageState" json:"state,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MessageStatusResponse) Reset() {
+	*x = MessageStatusResponse{}
+	mi := &file_playground_v1_message_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MessageStatusResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MessageStatusResponse) ProtoMessage() {}
+
+func (x *MessageStatusResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_playground_v1_message_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MessageStatusResponse.ProtoReflect.Descriptor instead.
+func (*MessageStatusResponse) Descriptor() ([]byte, []int) {
+	return file_playground_v1_message_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *MessageStatusResponse) GetState() MessageState {
+	if x != nil {
+		return x.State
+	}
+	return MessageState_SENDING
+}
+
 var File_playground_v1_message_proto protoreflect.FileDescriptor
 
 const file_playground_v1_message_proto_rawDesc = "" +
 	"\n" +
-	"\x1bplayground/v1/message.proto\x12\rplayground.v1\x1a\x1cgoogle/api/annotations.proto\"<\n" +
+	"\x1bplayground/v1/message.proto\x12\rplayground.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x1bbuf/validate/validate.proto\x1a\x14state/v1/state.proto\"<\n" +
 	"\aMessage\x12\x1d\n" +
 	"\n" +
 	"message_id\x18\x01 \x01(\tR\tmessageId\x12\x12\n" +
-	"\x04text\x18\x02 \x01(\tR\x04text\"*\n" +
-	"\x14CreateMessageRequest\x12\x12\n" +
-	"\x04text\x18\x01 \x01(\tR\x04text\"6\n" +
+	"\x04text\x18\x02 \x01(\tR\x04text\"6\n" +
+	"\x14CreateMessageRequest\x12\x1e\n" +
+	"\x04text\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x18@R\x04text\"6\n" +
 	"\x15CreateMessageResponse\x12\x1d\n" +
 	"\n" +
-	"message_id\x18\x01 \x01(\tR\tmessageId\"2\n" +
-	"\x11GetMessageRequest\x12\x1d\n" +
+	"message_id\x18\x01 \x01(\tR\tmessageId\"?\n" +
+	"\x11GetMessageRequest\x12*\n" +
 	"\n" +
-	"message_id\x18\x01 \x01(\tR\tmessageId\"F\n" +
+	"message_id\x18\x01 \x01(\tB\v\xbaH\b\xc8\x01\x01r\x03\xb0\x01\x01R\tmessageId\"F\n" +
 	"\x12GetMessageResponse\x120\n" +
 	"\amessage\x18\x01 \x01(\v2\x16.playground.v1.MessageR\amessage\"\x15\n" +
 	"\x13ListMessagesRequest\"J\n" +
 	"\x14ListMessagesResponse\x122\n" +
-	"\bmessages\x18\x01 \x03(\v2\x16.playground.v1.MessageR\bmessages\"5\n" +
-	"\x14DeleteMessageRequest\x12\x1d\n" +
+	"\bmessages\x18\x01 \x03(\v2\x16.playground.v1.MessageR\bmessages\"B\n" +
+	"\x14DeleteMessageRequest\x12*\n" +
 	"\n" +
-	"message_id\x18\x01 \x01(\tR\tmessageId\"\x17\n" +
-	"\x15DeleteMessageResponse2\xe6\x03\n" +
+	"message_id\x18\x01 \x01(\tB\v\xbaH\b\xc8\x01\x01r\x03\xb0\x01\x01R\tmessageId\"\x17\n" +
+	"\x15DeleteMessageResponse\"\x89\x01\n" +
+	"\x10SendMessageState\x12!\n" +
+	"\foperation_id\x18\x01 \x01(\tR\voperationId\x121\n" +
+	"\x05state\x18\x04 \x01(\x0e2\x1b.playground.v1.MessageStateR\x05state:\x1f\x82\xd28\x1b\n" +
+	"\x19\n" +
+	"\x11\b\x05\x10\x01\x19\x00\x00\x00\x00\x00\x00\x00@ \n" +
+	"(<\x12\x04\n" +
+	"\x02do\"k\n" +
+	"\x12SendMessageRequest\x12*\n" +
+	"\n" +
+	"message_id\x18\x01 \x01(\tB\v\xbaH\b\xc8\x01\x01r\x03\xb0\x01\x01R\tmessageId\x12)\n" +
+	"\x10simulate_failure\x18\x02 \x01(\bR\x0fsimulateFailure\"W\n" +
+	"\x13SendMessageResponse\x12\x1d\n" +
+	"\n" +
+	"message_id\x18\x01 \x01(\tR\tmessageId\x12!\n" +
+	"\foperation_id\x18\x02 \x01(\tR\voperationId\"m\n" +
+	"\x14MessageStatusRequest\x12*\n" +
+	"\n" +
+	"message_id\x18\x01 \x01(\tB\v\xbaH\b\xc8\x01\x01r\x03\xb0\x01\x01R\tmessageId\x12)\n" +
+	"\foperation_id\x18\x02 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\voperationId\"J\n" +
+	"\x15MessageStatusResponse\x121\n" +
+	"\x05state\x18\x01 \x01(\x0e2\x1b.playground.v1.MessageStateR\x05state*6\n" +
+	"\fMessageState\x12\v\n" +
+	"\aSENDING\x10\x00\x12\n" +
+	"\n" +
+	"\x06FAILED\x10\x01\x12\r\n" +
+	"\tSUCCEEDED\x10\x022\xfa\x05\n" +
 	"\x0eMessageService\x12t\n" +
 	"\n" +
 	"GetMessage\x12 .playground.v1.GetMessageRequest\x1a!.playground.v1.GetMessageResponse\"!\x82\xd3\xe4\x93\x02\x1b\x12\x19/v1/messages/{message_id}\x12p\n" +
 	"\rCreateMessage\x12#.playground.v1.CreateMessageRequest\x1a$.playground.v1.CreateMessageResponse\"\x14\x82\xd3\xe4\x93\x02\x0e\"\f/v1/messages\x12}\n" +
 	"\rDeleteMessage\x12#.playground.v1.DeleteMessageRequest\x1a$.playground.v1.DeleteMessageResponse\"!\x82\xd3\xe4\x93\x02\x1b*\x19/v1/messages/{message_id}\x12m\n" +
-	"\fListMessages\x12\".playground.v1.ListMessagesRequest\x1a#.playground.v1.ListMessagesResponse\"\x14\x82\xd3\xe4\x93\x02\x0e\x12\f/v1/messagesB\xcb\x01\n" +
+	"\fListMessages\x12\".playground.v1.ListMessagesRequest\x1a#.playground.v1.ListMessagesResponse\"\x14\x82\xd3\xe4\x93\x02\x0e\x12\f/v1/messages\x12|\n" +
+	"\vSendMessage\x12!.playground.v1.SendMessageRequest\x1a\".playground.v1.SendMessageResponse\"&\x82\xd3\xe4\x93\x02 \"\x1e/v1/messages/{message_id}/send\x12\x93\x01\n" +
+	"\rMessageStatus\x12#.playground.v1.MessageStatusRequest\x1a$.playground.v1.MessageStatusResponse\"7\x82\xd3\xe4\x93\x021\x12//v1/messages/{message_id}/status/{operation_id}B\xcb\x01\n" +
 	"\x11com.playground.v1B\fMessageProtoP\x01ZSgithub.com/andrewstucki/vanguard-playground/internal/gen/playground/v1;playgroundv1\xa2\x02\x03PXX\xaa\x02\rPlayground.V1\xca\x02\rPlayground\\V1\xe2\x02\x19Playground\\V1\\GPBMetadata\xea\x02\x0ePlayground::V1b\x06proto3"
 
 var (
@@ -456,34 +788,47 @@ func file_playground_v1_message_proto_rawDescGZIP() []byte {
 	return file_playground_v1_message_proto_rawDescData
 }
 
-var file_playground_v1_message_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_playground_v1_message_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_playground_v1_message_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_playground_v1_message_proto_goTypes = []any{
-	(*Message)(nil),               // 0: playground.v1.Message
-	(*CreateMessageRequest)(nil),  // 1: playground.v1.CreateMessageRequest
-	(*CreateMessageResponse)(nil), // 2: playground.v1.CreateMessageResponse
-	(*GetMessageRequest)(nil),     // 3: playground.v1.GetMessageRequest
-	(*GetMessageResponse)(nil),    // 4: playground.v1.GetMessageResponse
-	(*ListMessagesRequest)(nil),   // 5: playground.v1.ListMessagesRequest
-	(*ListMessagesResponse)(nil),  // 6: playground.v1.ListMessagesResponse
-	(*DeleteMessageRequest)(nil),  // 7: playground.v1.DeleteMessageRequest
-	(*DeleteMessageResponse)(nil), // 8: playground.v1.DeleteMessageResponse
+	(MessageState)(0),             // 0: playground.v1.MessageState
+	(*Message)(nil),               // 1: playground.v1.Message
+	(*CreateMessageRequest)(nil),  // 2: playground.v1.CreateMessageRequest
+	(*CreateMessageResponse)(nil), // 3: playground.v1.CreateMessageResponse
+	(*GetMessageRequest)(nil),     // 4: playground.v1.GetMessageRequest
+	(*GetMessageResponse)(nil),    // 5: playground.v1.GetMessageResponse
+	(*ListMessagesRequest)(nil),   // 6: playground.v1.ListMessagesRequest
+	(*ListMessagesResponse)(nil),  // 7: playground.v1.ListMessagesResponse
+	(*DeleteMessageRequest)(nil),  // 8: playground.v1.DeleteMessageRequest
+	(*DeleteMessageResponse)(nil), // 9: playground.v1.DeleteMessageResponse
+	(*SendMessageState)(nil),      // 10: playground.v1.SendMessageState
+	(*SendMessageRequest)(nil),    // 11: playground.v1.SendMessageRequest
+	(*SendMessageResponse)(nil),   // 12: playground.v1.SendMessageResponse
+	(*MessageStatusRequest)(nil),  // 13: playground.v1.MessageStatusRequest
+	(*MessageStatusResponse)(nil), // 14: playground.v1.MessageStatusResponse
 }
 var file_playground_v1_message_proto_depIdxs = []int32{
-	0, // 0: playground.v1.GetMessageResponse.message:type_name -> playground.v1.Message
-	0, // 1: playground.v1.ListMessagesResponse.messages:type_name -> playground.v1.Message
-	3, // 2: playground.v1.MessageService.GetMessage:input_type -> playground.v1.GetMessageRequest
-	1, // 3: playground.v1.MessageService.CreateMessage:input_type -> playground.v1.CreateMessageRequest
-	7, // 4: playground.v1.MessageService.DeleteMessage:input_type -> playground.v1.DeleteMessageRequest
-	5, // 5: playground.v1.MessageService.ListMessages:input_type -> playground.v1.ListMessagesRequest
-	4, // 6: playground.v1.MessageService.GetMessage:output_type -> playground.v1.GetMessageResponse
-	2, // 7: playground.v1.MessageService.CreateMessage:output_type -> playground.v1.CreateMessageResponse
-	8, // 8: playground.v1.MessageService.DeleteMessage:output_type -> playground.v1.DeleteMessageResponse
-	6, // 9: playground.v1.MessageService.ListMessages:output_type -> playground.v1.ListMessagesResponse
-	6, // [6:10] is the sub-list for method output_type
-	2, // [2:6] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	1,  // 0: playground.v1.GetMessageResponse.message:type_name -> playground.v1.Message
+	1,  // 1: playground.v1.ListMessagesResponse.messages:type_name -> playground.v1.Message
+	0,  // 2: playground.v1.SendMessageState.state:type_name -> playground.v1.MessageState
+	0,  // 3: playground.v1.MessageStatusResponse.state:type_name -> playground.v1.MessageState
+	4,  // 4: playground.v1.MessageService.GetMessage:input_type -> playground.v1.GetMessageRequest
+	2,  // 5: playground.v1.MessageService.CreateMessage:input_type -> playground.v1.CreateMessageRequest
+	8,  // 6: playground.v1.MessageService.DeleteMessage:input_type -> playground.v1.DeleteMessageRequest
+	6,  // 7: playground.v1.MessageService.ListMessages:input_type -> playground.v1.ListMessagesRequest
+	11, // 8: playground.v1.MessageService.SendMessage:input_type -> playground.v1.SendMessageRequest
+	13, // 9: playground.v1.MessageService.MessageStatus:input_type -> playground.v1.MessageStatusRequest
+	5,  // 10: playground.v1.MessageService.GetMessage:output_type -> playground.v1.GetMessageResponse
+	3,  // 11: playground.v1.MessageService.CreateMessage:output_type -> playground.v1.CreateMessageResponse
+	9,  // 12: playground.v1.MessageService.DeleteMessage:output_type -> playground.v1.DeleteMessageResponse
+	7,  // 13: playground.v1.MessageService.ListMessages:output_type -> playground.v1.ListMessagesResponse
+	12, // 14: playground.v1.MessageService.SendMessage:output_type -> playground.v1.SendMessageResponse
+	14, // 15: playground.v1.MessageService.MessageStatus:output_type -> playground.v1.MessageStatusResponse
+	10, // [10:16] is the sub-list for method output_type
+	4,  // [4:10] is the sub-list for method input_type
+	4,  // [4:4] is the sub-list for extension type_name
+	4,  // [4:4] is the sub-list for extension extendee
+	0,  // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_playground_v1_message_proto_init() }
@@ -496,13 +841,14 @@ func file_playground_v1_message_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_playground_v1_message_proto_rawDesc), len(file_playground_v1_message_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   9,
+			NumEnums:      1,
+			NumMessages:   14,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_playground_v1_message_proto_goTypes,
 		DependencyIndexes: file_playground_v1_message_proto_depIdxs,
+		EnumInfos:         file_playground_v1_message_proto_enumTypes,
 		MessageInfos:      file_playground_v1_message_proto_msgTypes,
 	}.Build()
 	File_playground_v1_message_proto = out.File
