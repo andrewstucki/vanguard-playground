@@ -9,10 +9,8 @@ require (
 	connectrpc.com/vanguard v0.3.0
 	github.com/andrewstucki/protoc-states v0.0.0-20251003212408-8baa1d19f76b
 	github.com/google/uuid v1.6.0
-	github.com/microsoft/durabletask-go v0.6.0
 	github.com/rs/zerolog v1.34.0
 	github.com/spf13/cobra v1.10.1
-	golang.org/x/sync v0.16.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20250922171735-9219d122eba9
 	google.golang.org/grpc v1.75.1
 	google.golang.org/protobuf v1.36.9
@@ -34,6 +32,7 @@ require (
 	github.com/marusama/semaphore/v2 v2.5.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
+	github.com/microsoft/durabletask-go v0.6.0 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/spf13/pflag v1.0.9 // indirect
 	github.com/stoewer/go-strcase v1.3.0 // indirect
@@ -45,6 +44,7 @@ require (
 	golang.org/x/exp v0.0.0-20240325151524-a685a6edb6d8 // indirect
 	golang.org/x/mod v0.26.0 // indirect
 	golang.org/x/net v0.43.0 // indirect
+	golang.org/x/sync v0.16.0 // indirect
 	golang.org/x/sys v0.35.0 // indirect
 	golang.org/x/text v0.28.0 // indirect
 	golang.org/x/tools v0.35.0 // indirect
