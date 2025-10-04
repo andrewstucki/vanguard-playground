@@ -14,23 +14,25 @@ import (
 )
 
 // statusCmd represents the status command
-var statusCmd = &cobra.Command{
-	Use:  "status [flags] <message-id> <operation-id>",
-	Args: cobra.ExactArgs(2),
-	Run: func(cmd *cobra.Command, args []string) {
-		client := client.NewClient(port)
-		response, err := client.MessageStatus(cmd.Context(), connect.NewRequest(&playgroundv1.MessageStatusRequest{
-			MessageId:   args[0],
-			OperationId: args[1],
-		}))
-		if err != nil {
-			fmt.Println("error:", err)
-			os.Exit(1)
-		}
-		fmt.Printf("state: %+v\n", response.Msg.State)
-	},
+func statusCmd() *cobra.Command {
+	return &cobra.Command{
+		Use:  "status [flags] <message-id> <operation-id>",
+		Args: cobra.ExactArgs(2),
+		Run: func(cmd *cobra.Command, args []string) {
+			client := client.NewClient(port)
+			response, err := client.MessageStatus(cmd.Context(), connect.NewRequest(&playgroundv1.MessageStatusRequest{
+				MessageId:   args[0],
+				OperationId: args[1],
+			}))
+			if err != nil {
+				fmt.Println("error:", err)
+				os.Exit(1)
+			}
+			fmt.Printf("state: %+v\n", response.Msg.State)
+		},
+	}
 }
 
 func init() {
-	rootCmd.AddCommand(statusCmd)
+	rootCmd.AddCommand(statusCmd())
 }

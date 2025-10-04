@@ -2,47 +2,50 @@ package server
 
 import (
 	"context"
+	"errors"
+	"time"
 
-	"github.com/andrewstucki/protoc-states/workflows"
-	playgroundv1 "github.com/andrewstucki/vanguard-playground/internal/gen/playground/v1"
 	"github.com/andrewstucki/vanguard-playground/internal/models"
-	"github.com/microsoft/durabletask-go/backend"
-	"github.com/rs/zerolog/log"
 )
 
-func RunWorker(ctx context.Context) error {
-	logger := log.With().Str("component", "worker").Logger()
+func RunWorker(ctx context.Context) (ret error) {
+	logger, writer := NewLogger()
+	defer func() {
+		if err := writer.Close(); err != nil {
+			ret = errors.Join(ret, err)
+		}
+	}()
+
+	logger = logger.With().Str("component", "worker").Logger()
 
 	handler := &handler{
 		logger: logger,
 	}
 
-	builder := workflows.NewWorkflowProcessorBuilder().WithLogger(backend.DefaultLogger()).Register(
-		playgroundv1.NewSendMessageStateWorkflowRegistration(handler),
-	)
-
-	// can only be run in persistent mode
-	logger.Info().Msg("using persistent database")
-	dbBuilder := workflows.NewLibSQLBackendBuilder()
-	db, cleanup, err := dbBuilder.DB()
+	backend, err := models.NewBackend(models.BackendConfig{
+		Logger:  logger,
+		Handler: handler,
+		// can only be run in persistent mode
+		Persistent: true,
+	})
 	if err != nil {
 		return err
 	}
+	handler.backend = backend
+	defer func() {
+		shutdownCtx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+		if err := handler.backend.Shutdown(shutdownCtx); err != nil {
+			logger.Err(err).Msg("Error shutting processor down cleanly")
+			ret = errors.Join(ret, err)
+		}
+		cancel()
+	}()
 
-	builder.WithBackendFactory(dbBuilder.Build)
-	defer cleanup()
-	if err := models.EnsureSchema(db); err != nil {
-		return err
-	}
-
-	handler.db = db
-	handler.queries = models.New(db)
-	handler.processor = builder.Build()
-
-	if err := handler.processor.Start(ctx); err != nil {
+	if err := handler.backend.Start(ctx); err != nil {
 		return err
 	}
 
 	<-ctx.Done()
-	return handler.processor.Shutdown(context.Background())
+
+	return nil
 }

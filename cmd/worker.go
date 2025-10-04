@@ -13,19 +13,21 @@ import (
 )
 
 // workerCmd represents the serve command
-var workerCmd = &cobra.Command{
-	Use: "worker",
-	Run: func(cmd *cobra.Command, args []string) {
-		ctx, cancel := signal.NotifyContext(cmd.Context(), syscall.SIGINT, syscall.SIGTERM)
-		defer cancel()
+func workerCmd() *cobra.Command {
+	return &cobra.Command{
+		Use: "worker",
+		Run: func(cmd *cobra.Command, args []string) {
+			ctx, cancel := signal.NotifyContext(cmd.Context(), syscall.SIGINT, syscall.SIGTERM)
+			defer cancel()
 
-		err := server.RunWorker(ctx)
-		if err != nil {
-			os.Exit(1)
-		}
-	},
+			err := server.RunWorker(ctx)
+			if err != nil {
+				os.Exit(1)
+			}
+		},
+	}
 }
 
 func init() {
-	rootCmd.AddCommand(workerCmd)
+	rootCmd.AddCommand(workerCmd())
 }
